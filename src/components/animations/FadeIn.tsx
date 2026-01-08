@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Variants, type TargetAndTransition } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface FadeInProps {
@@ -13,30 +13,30 @@ interface FadeInProps {
   amount?: number;
 }
 
-const directionVariants: Record<
-  string,
-  { initial: TargetAndTransition; animate: TargetAndTransition }
-> = {
-  up: {
-    initial: { opacity: 0, y: 40 },
-    animate: { opacity: 1, y: 0 },
-  },
-  down: {
-    initial: { opacity: 0, y: -40 },
-    animate: { opacity: 1, y: 0 },
-  },
-  left: {
-    initial: { opacity: 0, x: 40 },
-    animate: { opacity: 1, x: 0 },
-  },
-  right: {
-    initial: { opacity: 0, x: -40 },
-    animate: { opacity: 1, x: 0 },
-  },
-  none: {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-  },
+const getVariants = (direction: string): Variants => {
+  const variants: Record<string, Variants> = {
+    up: {
+      hidden: { opacity: 0, y: 40 },
+      visible: { opacity: 1, y: 0 },
+    },
+    down: {
+      hidden: { opacity: 0, y: -40 },
+      visible: { opacity: 1, y: 0 },
+    },
+    left: {
+      hidden: { opacity: 0, x: 40 },
+      visible: { opacity: 1, x: 0 },
+    },
+    right: {
+      hidden: { opacity: 0, x: -40 },
+      visible: { opacity: 1, x: 0 },
+    },
+    none: {
+      hidden: { opacity: 0 },
+      visible: { opacity: 1 },
+    },
+  };
+  return variants[direction];
 };
 
 export function FadeIn({
@@ -48,12 +48,11 @@ export function FadeIn({
   once = true,
   amount = 0.3,
 }: FadeInProps) {
-  const { initial, animate } = directionVariants[direction];
-
   return (
     <motion.div
-      initial={initial}
-      whileInView={animate}
+      variants={getVariants(direction)}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once, amount, margin: "-50px" }}
       transition={{
         duration,
@@ -117,10 +116,11 @@ export function StaggerItem({
   className,
   direction = "up",
 }: StaggerItemProps) {
+  const baseVariants = getVariants(direction);
   const itemVariants: Variants = {
-    hidden: directionVariants[direction].initial as Variants["hidden"],
+    hidden: baseVariants.hidden,
     visible: {
-      ...directionVariants[direction].animate,
+      ...(baseVariants.visible as object),
       transition: {
         duration: 0.6,
         ease: [0.25, 0.4, 0.25, 1],

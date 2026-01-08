@@ -1,19 +1,22 @@
-'use client'
+"use client";
 
-import { motion, type Variants } from 'framer-motion'
-import { cn } from '@/lib/utils'
+import { motion, type Variants, type TargetAndTransition } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface FadeInProps {
-  children: React.ReactNode
-  className?: string
-  direction?: 'up' | 'down' | 'left' | 'right' | 'none'
-  delay?: number
-  duration?: number
-  once?: boolean
-  amount?: number
+  children: React.ReactNode;
+  className?: string;
+  direction?: "up" | "down" | "left" | "right" | "none";
+  delay?: number;
+  duration?: number;
+  once?: boolean;
+  amount?: number;
 }
 
-const directionVariants: Record<string, { initial: object; animate: object }> = {
+const directionVariants: Record<
+  string,
+  { initial: TargetAndTransition; animate: TargetAndTransition }
+> = {
   up: {
     initial: { opacity: 0, y: 40 },
     animate: { opacity: 1, y: 0 },
@@ -34,24 +37,24 @@ const directionVariants: Record<string, { initial: object; animate: object }> = 
     initial: { opacity: 0 },
     animate: { opacity: 1 },
   },
-}
+};
 
 export function FadeIn({
   children,
   className,
-  direction = 'up',
+  direction = "up",
   delay = 0,
   duration = 0.6,
   once = true,
   amount = 0.3,
 }: FadeInProps) {
-  const { initial, animate } = directionVariants[direction]
+  const { initial, animate } = directionVariants[direction];
 
   return (
     <motion.div
       initial={initial}
       whileInView={animate}
-      viewport={{ once, amount, margin: '-50px' }}
+      viewport={{ once, amount, margin: "-50px" }}
       transition={{
         duration,
         delay,
@@ -61,15 +64,15 @@ export function FadeIn({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 // Stagger container for multiple FadeIn children
 interface StaggerContainerProps {
-  children: React.ReactNode
-  className?: string
-  staggerDelay?: number
-  delayChildren?: number
+  children: React.ReactNode;
+  className?: string;
+  staggerDelay?: number;
+  delayChildren?: number;
 }
 
 export function StaggerContainer({
@@ -87,7 +90,7 @@ export function StaggerContainer({
         delayChildren,
       },
     },
-  }
+  };
 
   return (
     <motion.div
@@ -99,23 +102,23 @@ export function StaggerContainer({
     >
       {children}
     </motion.div>
-  )
+  );
 }
 
 // Stagger item to be used inside StaggerContainer
 interface StaggerItemProps {
-  children: React.ReactNode
-  className?: string
-  direction?: 'up' | 'down' | 'left' | 'right' | 'none'
+  children: React.ReactNode;
+  className?: string;
+  direction?: "up" | "down" | "left" | "right" | "none";
 }
 
 export function StaggerItem({
   children,
   className,
-  direction = 'up',
+  direction = "up",
 }: StaggerItemProps) {
   const itemVariants: Variants = {
-    hidden: directionVariants[direction].initial as Variants['hidden'],
+    hidden: directionVariants[direction].initial as Variants["hidden"],
     visible: {
       ...directionVariants[direction].animate,
       transition: {
@@ -123,11 +126,11 @@ export function StaggerItem({
         ease: [0.25, 0.4, 0.25, 1],
       },
     },
-  }
+  };
 
   return (
     <motion.div variants={itemVariants} className={cn(className)}>
       {children}
     </motion.div>
-  )
+  );
 }
